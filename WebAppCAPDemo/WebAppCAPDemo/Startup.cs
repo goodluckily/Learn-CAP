@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -13,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebAppCAPDemo.Filter;
+using DotNetCore.CAP;
 
 namespace WebAppCAPDemo
 {
@@ -28,6 +30,11 @@ namespace WebAppCAPDemo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<CAPDbcontext>(option =>
+            {
+                option.UseMySQL("Server=42.192.3.5;port=3306;Database=testcap;User ID=root;Password=123456;charset=utf8;Allow User Variables=true");
+            });
+
             services.AddCap(x =>
             {
                 //UI 默认地址是 /cap
@@ -37,10 +44,10 @@ namespace WebAppCAPDemo
                 //x.DefaultGroupName
 
                 //失败后的重试次数
-                x.FailedRetryCount = 2;
+                x.FailedRetryCount = 1;
 
                 //失败重试间隔
-                x.FailedRetryInterval = int.MaxValue;
+                x.FailedRetryInterval = 24 * 3600;
 
                 //失败达到一定次数后的回调
                 //x.FailedThresholdCallback = x => 
@@ -51,6 +58,7 @@ namespace WebAppCAPDemo
                 //x.SucceedMessageExpiredAfter
 
                 //x.UseMySql("Server=42.192.3.5;port=3306;Database=testcap;User ID=root;Password=123456;charset=utf8;Allow User Variables=true");
+
                 //x.UseRabbitMQ("localhost"); //简单的配置
                 //x.UseRabbitMQ(x =>
                 //{
@@ -67,6 +75,7 @@ namespace WebAppCAPDemo
                 //便于快速启动时的设置
                 x.UseInMemoryMessageQueue();
                 x.UseInMemoryStorage();
+
             }).AddSubscribeFilter<MyCapFilter>();
 
             services.AddControllers();
@@ -87,6 +96,8 @@ namespace WebAppCAPDemo
             }
 
             app.UseRouting();
+
+            app.UseCapDashboard();
 
             app.UseAuthorization();
 

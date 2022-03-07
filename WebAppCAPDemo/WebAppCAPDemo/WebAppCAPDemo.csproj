@@ -11,6 +11,7 @@
 		<PackageReference Include="DotNetCore.CAP.MySql" Version="6.0.1" />
 		<PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="6.0.1" />
 		<PackageReference Include="DotNetCore.CAP.RedisStreams" Version="6.0.1" />
+		<PackageReference Include="MySql.EntityFrameworkCore" Version="5.0.10" />
 		<PackageReference Include="Savorboard.CAP.InMemoryMessageQueue" Version="6.0.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.2.3" />
 		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.2.3" />
